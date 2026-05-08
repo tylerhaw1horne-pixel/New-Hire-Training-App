@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>Huey Luey's Built-In New Hire Trainer App</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1e7f4f;--green2:#16643e;--green3:#0f4f31;--mint:#e8f5ee;
+  --orange:#d35400;--orange2:#e8651a;--orangeSoft:#fff1e8;
+  --cream:#f6f1e8;--paper:#fffdf8;--card:#fff;--ink:#17212f;--soft:#667085;
+  --line:rgba(30,127,79,.18);--line2:rgba(23,33,47,.12);
+  --shadow:0 12px 34px rgba(17,24,39,.10);--shadow2:0 24px 70px rgba(17,24,39,.24);
+  --red:#b91c1c;--redBg:#fee2e2;--yellow:#b45309;--yellowBg:#fef3c7;--blue:#075985;--blueBg:#e0f2fe;--purple:#6d28d9;--purpleBg:#ede9fe;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Poppins,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 5% 0,rgba(30,127,79,.13),transparent 28%),radial-gradient(circle at 95% 0,rgba(211,84,0,.10),transparent 28%),var(--cream);color:var(--ink);overflow-x:hidden}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:310px 1fr}
+.side{position:sticky;top:0;height:100vh;background:linear-gradient(180deg,var(--green3),var(--green) 58%,var(--green2));color:#fff;padding:20px 18px;display:flex;flex-direction:column;gap:15px;box-shadow:var(--shadow2);z-index:20}
+.brand{display:flex;gap:12px;align-items:center;padding:8px 4px 16px;border-bottom:1px solid rgba(255,255,255,.22)}
+.logo{width:56px;height:56px;border-radius:18px;background:#fff;color:var(--green);display:grid;place-items:center;font-size:24px;font-weight:900;letter-spacing:-1px;box-shadow:0 10px 22px rgba(0,0,0,.22)}
+.brand h1{font-size:18px;line-height:1.05;font-weight:900}.brand p{font-size:10px;text-transform:uppercase;letter-spacing:.9px;font-weight:800;opacity:.72;margin-top:4px}
+.nav{display:grid;gap:8px}
+.nav button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.11);color:#fff;border-radius:15px;padding:12px;text-align:left;font-weight:900;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.nav button small{font-size:10px;letter-spacing:.45px;opacity:.72}
+.nav button.active,.nav button:hover{background:#fff;color:var(--green2);transform:translateY(-1px)}
+.sideNote{margin-top:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:14px;font-size:12px;font-weight:650;line-height:1.45}
+.sideNote b{display:block;margin-bottom:5px}.sideStats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.sideStats div{background:rgba(255,255,255,.13);border-radius:12px;padding:8px}
+.main{padding:24px;max-width:1600px;width:100%;margin:0 auto}
+.mobile{display:none}
+.view{display:none}.view.active{display:block}
+.head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:18px}
+.head h2{font-size:30px;line-height:1.05;color:var(--green2);font-weight:900;letter-spacing:-.5px}.head p{font-size:13px;color:var(--soft);font-weight:650;margin-top:6px;max-width:900px;line-height:1.45}
+.actions{display:flex;gap:9px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;background:var(--green);color:#fff;padding:11px 15px;font-size:13px;font-weight:900;box-shadow:0 7px 16px rgba(30,127,79,.22);display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}.btn:active{transform:scale(.98)}.btn.orange{background:var(--orange);box-shadow:0 7px 16px rgba(211,84,0,.22)}.btn.red{background:var(--red)}.btn.light{background:#fff;color:var(--green);border:2px solid var(--line);box-shadow:none}.btn.dark{background:#17212f}.btn.small{padding:7px 10px;font-size:11px}.btn.full{width:100%}
+.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:15px}
+.card{background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:18px;box-shadow:0 7px 22px rgba(17,24,39,.06);overflow:hidden}.card.pad{padding:16px}
+.kpi{padding:16px;border-left:6px solid var(--green);min-height:96px;display:flex;flex-direction:column;justify-content:center}.kpi strong{font-size:30px;line-height:1;color:var(--green2);font-weight:900}.kpi span{font-size:11px;text-transform:uppercase;color:var(--soft);font-weight:900;letter-spacing:.45px;margin-top:6px}.kpi.orange{border-left-color:var(--orange)}.kpi.red{border-left-color:var(--red)}.kpi.blue{border-left-color:var(--blue)}.kpi.purple{border-left-color:var(--purple)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:13px;align-items:center}
+.search,.select,.clean{border:2px solid var(--line);background:#fff;border-radius:999px;padding:11px 14px;font-weight:750;color:var(--ink);outline:none}.search{flex:1;min-width:240px}textarea.clean{border-radius:14px;min-height:96px;resize:vertical;width:100%}
+.tableWrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 7px 22px rgba(17,24,39,.045)}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:1040px}th{position:sticky;top:0;background:var(--green);color:#fff;text-align:left;padding:12px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.45px;font-weight:900;z-index:1}td{border-bottom:1px solid rgba(23,33,47,.08);padding:11px 10px;font-size:12.5px;vertical-align:middle}tbody tr:hover td{background:#fbfdfb}
+.avatar{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--green),var(--orange));color:#fff;display:grid;place-items:center;font-weight:900;box-shadow:0 7px 15px rgba(0,0,0,.12);flex:0 0 42px}.nameCell{display:flex;gap:10px;align-items:center}.nameCell b{font-size:13px}.nameCell small{display:block;color:var(--soft);font-weight:700;font-size:11px}
+.badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:5px 9px;font-size:10.5px;font-weight:900;white-space:nowrap}.bGreen{background:#dcfce7;color:#16643e}.bRed{background:var(--redBg);color:#991b1b}.bYellow{background:var(--yellowBg);color:#92400e}.bBlue{background:var(--blueBg);color:var(--blue)}.bGray{background:#f3f4f6;color:#374151}.bOrange{background:var(--orangeSoft);color:var(--orange)}.bPurple{background:var(--purpleBg);color:var(--purple)}
+.progress{height:10px;border-radius:999px;background:#edf3ef;overflow:hidden;min-width:110px}.progress i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--orange),var(--green));width:0}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;align-items:start}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panelTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);background:#fff}.panelTitle h3{font-size:16px;color:var(--green2);font-weight:900}.panelTitle p{font-size:11px;color:var(--soft);font-weight:750;margin-top:2px}
+.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.formGrid label,.field{display:grid;gap:6px;font-size:11px;font-weight:900;letter-spacing:.35px;text-transform:uppercase;color:var(--soft)}.formGrid input,.formGrid select,.formGrid textarea,.field input,.field select,.field textarea{border:2px solid var(--line);border-radius:13px;padding:11px 12px;font-size:13px;font-weight:750;background:#fff;color:var(--ink);outline:none}.formGrid textarea{grid-column:1/-1;min-height:92px;resize:vertical}.wide{grid-column:1/-1}
+.packetGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:14px}.packet{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 7px 22px rgba(17,24,39,.05);position:relative;overflow:hidden}.packet:before{content:"";position:absolute;left:0;top:0;width:100%;height:6px;background:linear-gradient(90deg,var(--green),var(--orange))}.packet h3{color:var(--green2);font-size:18px;font-weight:900;margin:5px 0 5px}.packet p{color:var(--soft);font-size:12px;line-height:1.45;font-weight:650}.packet ul{margin:10px 0 0 18px;color:var(--ink);font-size:12.5px;font-weight:650;line-height:1.55}
+.docLayout{display:grid;grid-template-columns:300px 1fr;gap:14px}.docNav{display:grid;gap:8px;align-content:start}.docNav button{border:1px solid var(--line);background:#fff;border-radius:14px;padding:11px;font-weight:900;text-align:left;color:var(--green2)}.docNav button.active{background:var(--green);color:#fff}.docBody{padding:16px}.docBody h3{font-size:22px;color:var(--green2);font-weight:900;margin-bottom:8px}.docBody p,.docBody li{font-size:13px;line-height:1.58;font-weight:650}.docSection{border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:0 0 10px;background:#fff}.docSection h4{background:var(--mint);padding:10px 12px;color:var(--green2);font-size:14px}.docSection ul{padding:12px 18px 12px 30px}
+.editor{width:100%;min-height:480px;border:2px solid var(--line);border-radius:16px;padding:14px;font-size:13px;line-height:1.55;font-weight:650;background:#fff;resize:vertical}
+.stepBlock{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;margin-bottom:12px}.stepHead{background:linear-gradient(90deg,var(--mint),#fff);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}.stepHead h4{font-size:14px;color:var(--green2);font-weight:900}.stepHead small{font-weight:900;color:var(--orange)}.stepRow{display:grid;grid-template-columns:1fr 150px 110px 120px;gap:9px;align-items:center;border-top:1px solid rgba(23,33,47,.08);padding:10px 12px}.stepRow b{font-size:13px}.stepRow small{display:block;color:var(--soft);font-weight:650;font-size:11px;margin-top:2px}.stepRow select,.stepRow input{width:100%;border:1px solid rgba(23,33,47,.15);border-radius:11px;padding:8px;font-weight:800;background:#fff;font-size:12px}
+.note{border:1px solid rgba(23,33,47,.10);background:#fff;border-radius:15px;padding:11px;position:relative;margin-bottom:9px}.note:before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:999px;background:var(--green)}.note.red:before{background:var(--red)}.note.yellow:before{background:var(--yellow)}.note.blue:before{background:var(--blue)}.note.orange:before{background:var(--orange)}.noteTop{display:flex;justify-content:space-between;gap:10px;margin-left:8px;margin-bottom:4px}.noteTop b{font-size:12px}.noteTop small{font-size:10px;color:var(--soft);font-weight:800}.note p{margin-left:8px;font-size:12.5px;line-height:1.45;color:var(--ink);font-weight:600}
+.formCard{border:1px solid var(--line);background:#fff;border-radius:18px;padding:14px}.formCard h3{color:var(--green2);font-size:17px}.formCard p{color:var(--soft);font-size:12px;font-weight:650;line-height:1.45;margin-top:4px}.formCard .actions{margin-top:12px;justify-content:flex-start}
+.vaultFile{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid var(--line);background:#fff;border-radius:16px;padding:12px;margin-bottom:9px}.vaultFile b{font-size:13px;color:var(--green2)}.vaultFile small{display:block;color:var(--soft);font-size:11px;font-weight:700;margin-top:3px}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(980px,100%);background:var(--cream);z-index:90;box-shadow:-30px 0 80px rgba(0,0,0,.25);transform:translateX(105%);transition:.22s ease;overflow:auto}.drawer.open{transform:translateX(0)}.drawerTop{position:sticky;top:0;z-index:3;background:linear-gradient(90deg,var(--green3),var(--green));color:#fff;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 7px 18px rgba(0,0,0,.14)}.drawerTop h3{font-size:19px;font-weight:900}.drawerTop p{font-size:11px;opacity:.8;font-weight:750;margin-top:2px}.drawerBody{padding:16px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:24px;overflow:auto}.modal.open{display:flex}.modalBox{width:min(850px,100%);background:#fff;border-radius:24px;box-shadow:var(--shadow2);overflow:hidden}.modalHead{background:var(--green);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.modalHead h3{font-size:20px;font-weight:900}.closeBtn{width:38px;height:38px;border:0;background:rgba(255,255,255,.18);color:#fff;border-radius:12px;font-size:25px;line-height:1}.modalBody{padding:18px}
+.empty{text-align:center;padding:34px 20px;color:var(--soft);font-weight:750}.toast{position:fixed;right:18px;bottom:18px;z-index:200;background:#111827;color:#fff;border-radius:16px;padding:12px 14px;font-weight:900;font-size:13px;box-shadow:var(--shadow2);display:none}.toast.show{display:block}
+.printOnly{display:none}
+@media(max-width:1180px){.kpis{grid-template-columns:repeat(3,1fr)}.split,.docLayout,.three,.two{grid-template-columns:1fr}.docNav{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){.app{display:block}.side{display:none}.mobile{display:block;position:sticky;top:0;z-index:30;background:var(--green);color:#fff;box-shadow:var(--shadow)}.mobileTop{display:flex;justify-content:space-between;align-items:center;padding:10px 12px}.mobileNav{display:flex;gap:6px;overflow:auto;padding:8px 12px;background:var(--green2)}.mobileNav button{border:0;background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:8px 10px;font-weight:900;font-size:11px;white-space:nowrap}.mobileNav button.active{background:#fff;color:var(--green2)}.main{padding:15px 12px 38px}.head{display:block}.actions{justify-content:flex-start;margin-top:12px}.head h2{font-size:24px}.kpis{grid-template-columns:repeat(2,1fr)}.formGrid{grid-template-columns:1fr}.stepRow{grid-template-columns:1fr}.search{min-width:100%}.select{width:100%}}
+@media print{body{background:#fff}.side,.mobile,.head,.toolbar,.actions,.modal,.toast,.drawerTop .actions{display:none!important}.app{display:block}.main{padding:0;max-width:100%}.view{display:none!important}.printOnly{display:block!important}.card,.tableWrap,.stepBlock,.docSection{box-shadow:none;border:1px solid #aaa;break-inside:avoid;border-radius:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">HL</div><div><h1>Huey Luey's<br>New Hire Trainer</h1><p>Built-In Training App</p></div></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sideNote"><b>All-In Build</b>Dashboard, trainee profiles, packets, manual editor, forms/email center, document vault, trainer accountability, reports, and future Google/Firebase connections.<div class="sideStats"><div><b id="sideTrainees">0</b><span>Trainees</span></div><div><b id="sideDocs">0</b><span>Docs</span></div></div></div>
+  </aside>
+  <div>
+    <div class="mobile"><div class="mobileTop"><b>HL New Hire Trainer</b><button class="btn light small" onclick="openNewHire()">Add</button></div><div class="mobileNav" id="mobileNav"></div></div>
+    <main class="main">
+      <section class="view active" id="view-dashboard">
+        <div class="head"><div><h2>Training Command Center</h2><p>This is built as more than a tracker: new hires, trainer sign-offs, internal training manuals, form sending, manager wait checks, document vault, email templates, and printable reports all live here.</p></div><div class="actions"><button class="btn orange" onclick="openNewHire()">Add New Hire</button><button class="btn light" onclick="exportJSON()">Export Backup</button><button class="btn light" onclick="seedDemo()">Reload Demo</button></div></div>
+        <div class="grid kpis"><div class="card kpi"><strong id="kTotal">0</strong><span>Total Trainees</span></div><div class="card kpi orange"><strong id="kTraining">0</strong><span>In Training</span></div><div class="card kpi blue"><strong id="kReady">0</strong><span>Ready / Review</span></div><div class="card kpi red"><strong id="kFlags">0</strong><span>Red Flags</span></div><div class="card kpi purple"><strong id="kCertified">0</strong><span>Certified</span></div><div class="card kpi"><strong id="kAvg">0%</strong><span>Avg Progress</span></div></div>
+        <div class="toolbar"><input class="search" id="traineeSearch" placeholder="Search name, position, trainer, status..." oninput="renderDashboard()"><select class="select" id="filterPosition" onchange="renderDashboard()"></select><select class="select" id="filterStatus" onchange="renderDashboard()"><option value="">All Statuses</option><option>Not Started</option><option>Orientation</option><option>In Training</option><option>Needs Review</option><option>Ready for Manager Wait</option><option>Certified</option><option>Inactive</option></select></div>
+        <div class="tableWrap"><table><thead><tr><th>Trainee</th><th>Position</th><th>Location</th><th>Trainer</th><th>Current Stage</th><th>Progress</th><th>Status</th><th>Flags</th><th>Last Note</th><th>Actions</th></tr></thead><tbody id="traineeRows"></tbody></table></div>
+      </section>
+
+      <section class="view" id="view-trainer">
+        <div class="head"><div><h2>Trainer App</h2><p>Assign trainers, open trainee profiles, check off day-by-day training steps, add shift logs, score categories, and hold trainers accountable.</p></div><div class="actions"><button class="btn orange" onclick="openTrainer()">Add Trainer</button><button class="btn light" onclick="setView('dashboard')">View Trainees</button></div></div>
+        <div class="grid" id="trainerGrid"></div>
+      </section>
+
+      <section class="view" id="view-packets">
+        <div class="head"><div><h2>Position Training Packets</h2><p>Orientation, Server, Host, Bartender, and To-Go training paths are built into the app from the current materials. Each path can create checklists, sign-offs, quiz items, and manager wait forms.</p></div><div class="actions"><button class="btn light" onclick="setView('manuals')">Open Manuals</button></div></div>
+        <div class="packetGrid" id="packetCards"></div>
+      </section>
+
+      <section class="view" id="view-manuals">
+        <div class="head"><div><h2>Built-In Manual Library</h2><p>Full editable training library. Use View Mode on shift, or Edit Mode to revise wording without touching code. Saved locally now; later this will sync to Google Sheets/Firebase.</p></div><div class="actions"><input class="search" id="docSearch" placeholder="Search manuals..." oninput="renderDocView()"><button class="btn orange" onclick="toggleEditDoc()" id="editDocBtn">Edit Current Manual</button></div></div>
+        <div class="docLayout"><div class="docNav card pad" id="docNav"></div><div class="card" id="docContent"></div></div>
+      </section>
+
+      <section class="view" id="view-forms">
+        <div class="head"><div><h2>Forms, Emails & Module Sender</h2><p>Send welcome emails, training module reminders, manager wait forms, availability forms, commitment forms, and follow-up notes directly from the app using email drafts. Full automated sending comes later through Apps Script/Gmail.</p></div><div class="actions"><button class="btn light" onclick="openFormBuilder()">Create Custom Form</button></div></div>
+        <div class="toolbar"><select class="select" id="sendTrainee"></select><input class="search" id="formSearch" placeholder="Search forms/templates..." oninput="renderForms()"></div>
+        <div class="packetGrid" id="formsGrid"></div>
+      </section>
+
+      <section class="view" id="view-vault">
+        <div class="head"><div><h2>Document Vault</h2><p>Upload PDFs, sheets, forms, training packets, images, and files. Small files save inside the browser using IndexedDB. Permanent multi-device storage should be Firebase Storage or Google Drive after backend connection.</p></div><div class="actions"><label class="btn orange">Upload Files<input type="file" id="vaultUpload" multiple style="display:none" onchange="uploadVaultFiles(event)"></label><button class="btn light" onclick="setView('manuals')">Edit Built-In Docs</button></div></div>
+        <div class="two"><div class="card"><div class="panelTitle"><div><h3>Uploaded Files</h3><p>PDFs/sheets/images stored in this browser.</p></div></div><div class="card pad" style="border:0;box-shadow:none" id="vaultList"></div></div><div class="card"><div class="panelTitle"><div><h3>Original Source Documents</h3><p>Editable versions have been converted into the built-in manual and forms library.</p></div></div><div class="card pad" style="border:0;box-shadow:none" id="sourceDocs"></div></div></div>
+      </section>
+
+      <section class="view" id="view-reports">
+        <div class="head"><div><h2>Reports & Print Center</h2><p>Progress reports, red flags, incomplete training, trainer accountability, manager wait, certification reports, and printable employee records.</p></div><div class="actions"><button class="btn orange" onclick="window.print()">Print Report View</button><button class="btn light" onclick="exportCSV()">Export Trainees CSV</button></div></div>
+        <div class="split"><div class="card"><div class="panelTitle"><div><h3>Needs Attention</h3><p>Incomplete, low progress, needs review, or red flag records.</p></div></div><div class="tableWrap" style="border:0;border-radius:0;box-shadow:none"><table style="min-width:760px"><thead><tr><th>Name</th><th>Position</th><th>Stage</th><th>Progress</th><th>Flags</th></tr></thead><tbody id="reportRows"></tbody></table></div></div><div class="card"><div class="panelTitle"><div><h3>Certification Snapshot</h3><p>Quick status counts.</p></div></div><div class="card pad" style="border:0;box-shadow:none" id="reportSummary"></div></div></div>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="head"><div><h2>Backend Settings</h2><p>Later flow: Vercel/GitHub app → Apps Script Web App URL → Google Sheets backend → Firebase Storage for files/videos.</p></div><div class="actions"><button class="btn light" onclick="importJSONClick()">Import Backup</button><button class="btn red" onclick="resetAll()">Reset Local Data</button></div></div>
+        <div class="card pad grid"><label class="field">Apps Script Web App URL<input id="appsScriptUrl" placeholder="Paste Google Apps Script Web App URL later" oninput="saveSettings()"></label><label class="field">Firebase Config<textarea id="firebaseConfig" placeholder="Paste Firebase config JSON later" oninput="saveSettings()"></textarea></label><div class="note"><div class="noteTop"><b>Current Mode</b><small>Local-only</small></div><p>This version is a fully built local HTML app. It saves trainees, edits, docs, notes, and uploaded vault files in the browser. Once you give the Apps Script URL, I can wire Save/Load/Email/File APIs to the real backend.</p></div></div>
+      </section>
+      <section class="printOnly" id="printArea"></section>
+    </main>
+  </div>
+</div>
+
+<div class="drawer" id="profileDrawer"><div class="drawerTop"><div><h3 id="drawerTitle">Trainee Profile</h3><p id="drawerSub">Training record</p></div><div class="actions"><button class="btn light small" onclick="printProfile()">Print</button><button class="btn orange small" onclick="openNote()">Add Note</button><button class="btn light small" onclick="closeDrawer()">Close</button></div></div><div class="drawerBody" id="profileContent"></div></div>
+
+<div class="modal" id="hireModal"><div class="modalBox"><div class="modalHead"><h3 id="hireTitle">Add New Hire</h3><button class="closeBtn" onclick="closeModal('hireModal')">&times;</button></div><div class="modalBody"><form class="formGrid" onsubmit="saveTrainee(event)"><input type="hidden" id="editTraineeId"><label>First Name<input id="firstName" required></label><label>Last Name<input id="lastName" required></label><label>Phone<input id="phone"></label><label>Email<input id="email" type="email"></label><label>Position<select id="position" required></select></label><label>Location<select id="location"><option>Acworth</option><option>Hiram</option></select></label><label>Hire Date<input id="hireDate" type="date"></label><label>Start Date<input id="startDate" type="date"></label><label>Assigned Trainer<select id="assignedTrainer"></select></label><label>Status<select id="status"><option>Not Started</option><option>Orientation</option><option>In Training</option><option>Needs Review</option><option>Ready for Manager Wait</option><option>Certified</option><option>Inactive</option></select></label><label class="wide">Notes<textarea id="hireNotes" placeholder="Availability, experience, schedule notes, concerns..."></textarea></label><div class="wide actions"><button type="button" class="btn light" onclick="closeModal('hireModal')">Cancel</button><button class="btn orange" type="submit">Save New Hire</button></div></form></div></div></div>
+
+<div class="modal" id="noteModal"><div class="modalBox"><div class="modalHead"><h3>Add Training Note</h3><button class="closeBtn" onclick="closeModal('noteModal')">&times;</button></div><div class="modalBody"><form class="formGrid" onsubmit="saveNote(event)"><label>Note Type<select id="noteType"><option>General</option><option>Positive Feedback</option><option>Coaching Note</option><option>Red Flag</option><option>Attendance Issue</option><option>Skill Issue</option><option>Manager Only</option><option>Trainee Facing</option></select></label><label>Author<input id="noteAuthor" placeholder="Manager / Trainer"></label><label class="wide">Note<textarea id="noteText" required placeholder="What happened? What needs work? Next trainer focus?"></textarea></label><div class="wide actions"><button type="button" class="btn light" onclick="closeModal('noteModal')">Cancel</button><button class="btn orange" type="submit">Save Note</button></div></form></div></div></div>
+
+<div class="modal" id="trainerModal"><div class="modalBox"><div class="modalHead"><h3>Add Trainer</h3><button class="closeBtn" onclick="closeModal('trainerModal')">&times;</button></div><div class="modalBody"><form class="formGrid" onsubmit="saveTrainer(event)"><label>Trainer Name<input id="trainerName" required></label><label>Primary Position<select id="trainerPosition"></select></label><label>Location<select id="trainerLocation"><option>Acworth</option><option>Hiram</option></select></label><label>Email<input id="trainerEmail" type="email"></label><label class="wide">Manager Notes<textarea id="trainerNotes" placeholder="Strengths, coaching notes, best training positions..."></textarea></label><div class="wide actions"><button type="button" class="btn light" onclick="closeModal('trainerModal')">Cancel</button><button class="btn orange" type="submit">Save Trainer</button></div></form></div></div></div>
+
+<div class="modal" id="formModal"><div class="modalBox"><div class="modalHead"><h3 id="formModalTitle">Form / Email</h3><button class="closeBtn" onclick="closeModal('formModal')">&times;</button></div><div class="modalBody" id="formModalBody"></div></div></div>
+
+<input type="file" id="jsonImport" accept="application/json" style="display:none" onchange="importJSON(event)">
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY="hl.newhire.trainer.allin.v1";
+let activeView="dashboard", selectedTraineeId=null, activeDoc="Orientation Manual", editDoc=false;
+let db=null;
+const navItems=[["dashboard","Dashboard","LIVE"],["trainer","Trainer App","SIGN"],["packets","Packets","PATH"],["manuals","Manuals","EDIT"],["forms","Forms & Email","SEND"],["vault","Doc Vault","FILES"],["reports","Reports","PRINT"],["settings","Settings","SETUP"]];
+const sourceFiles=["HL Orientation Manual.pdf","HL Server Training Manual.pdf","HL Host Training Manual.pdf","HL Bar Training Manual.pdf","To-Go Manual Code.txt","Orientation Module Report.xlsx","Day 1 Module Report.xlsx","Day 1 Quiz #1 Report.xlsx","Day 1 Quiz #2 Report.xlsx","Day 2 Module Report.xlsx","Day 2 Quiz Report.xlsx","Day 3 Module Report.xlsx","Day 3 Quiz Report.xlsx","Day 4 Module Report.xlsx","Day 4 Quiz Report.xlsx","Day 5 Report.xlsx","Day 6 Report.xlsx","Day 7 Report.xlsx"];
+function uid(p="id"){return p+"_"+Math.random().toString(36).slice(2,9)+"_"+Date.now().toString(36)}
+function today(){return new Date().toISOString().slice(0,10)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function niceDate(d){if(!d)return "";return new Date(d+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}
+function initials(t){return (t.firstName?.[0]||"")+((t.lastName||"")[0]||"")}
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2400)}
+function defaultState(){return{settings:{appsScriptUrl:"",firebaseConfig:""},positions:["Server","Host","Bartender","To-Go","Expo","Busser","Line Cook","Prep","Dish","Manager Trainee"],trainers:[{id:"tr_tyler",name:"Tyler",position:"Manager Trainee",location:"Acworth",email:"",notes:"Manager sign-off, training accountability, final review."},{id:"tr_marlon",name:"Marlon",position:"Server",location:"Acworth",email:"",notes:"Server floor support and FOH training."},{id:"tr_ally",name:"Ally",position:"Host",location:"Acworth",email:"",notes:"Guest interaction, host flow, first impressions."},{id:"tr_brett",name:"Brett",position:"Bartender",location:"Acworth",email:"",notes:"Bar knowledge, drink builds, and service well."}],trainees:[],notes:[],docs:builtDocs(),forms:builtForms(),paths:builtPaths()}}
+let state=defaultState();
+function step(title,detail){return{id:uid("step"),title,detail,status:"Not Started",score:"",trainer:"",date:""}}
+function day(title,steps){return{id:uid("day"),title,steps}}
+function builtPaths(){return{
+"Server":[day("Orientation",["New hire paperwork, ADP, Toast, GroupMe, Sling, availability, restaurant tour.","Uniform and professionalism reviewed.","Safety, sanitation, guest-right-of-way, and vocabulary reviewed."].map(x=>step(x,x))),day("Day 1 — Service Foundation",[step("Online Day 1 module complete","Before training day 1."),step("5-Star Greet demonstrated","45-second greet, first-time guest, features, drinks by name, appetizer by name."),step("Commitment card delivery","Placed with My Commitment To You side up and explained naturally."),step("Time standards reviewed","Chips 1 min, drinks 2 min, bar drinks 5 min, apps 6 min, 2 minutes/2 bites."),step("Ticket writing and pivot points practiced","Orders written clearly with seat numbers."),step("Menu review","Appetizers, soups, and salads.")]),day("Day 2 — POS & Payments",[step("Online Day 2 module complete","Before shift."),step("POS basics","Item locations, modifiers, stay/send, handheld."),step("Ring-in accuracy","Live orders with trainer present."),step("Check splitting","Parties of 6+ split before sending to kitchen."),step("Auto gratuity","Parties of 8+ require manager before payment."),step("Checkout and tip out","4 signatures, bartender/busser/expo tip out.")]),day("Day 3 — Bar Knowledge",[step("Online Day 3 module complete","Before shift."),step("Tequila and mezcal","Agave, blanco, reposado, añejo, mezcal."),step("Drink menu review","Margaritas, signature drinks, beers, wines."),step("Carding","Anyone who looks 35 and under; no paper/phone ID."),step("To-Go margaritas","Food purchase, 2 max per entree, sealed containers.")]),day("Day 4 — Allergies & Special Requests",[step("Online Day 4 module complete","Before shift."),step("Allergy process","Gather details, inform manager before ring-in, mark ALLERGY, confirm with expo/kitchen."),step("Vegetarian and not vegetarian","Classic queso vs spicy queso; beans/rice/sauces review."),step("Gluten free basics","Corn tortillas, tequila steak, salmon, fiesta bowl; ask trainer/manager."),step("Full greet at tables","Trainer evaluates.")]),day("Day 5 — Sauces, Dressings, Proteins",[step("Online Day 5 module complete","Before shift."),step("Sauces tasted/reviewed","Quesos, salsa, verde, ranchero, tequila cream, etc."),step("Dressings reviewed","Balsamic, chipotle ranch, cilantro ranch, mango, oregano, ranch."),step("Proteins reviewed","Birria, brisket, chicken, chorizo, ground beef, Korean BBQ, salmon, shrimp, steak."),step("Runs 1-2 tables","Trainer shadows 100%.")]),day("Day 6 — Salesmanship",[step("Online Day 6 module complete","Before shift."),step("Premium verbiage","Sell handcrafted items by name."),step("Suggestive selling and upselling","Practice scripts."),step("Loyalty program","Points and reward basics."),step("Treasure chest and review cards","Kids experience and Google review cards."),step("Runs full section","Trainer shadows.")]),day("Day 7 — Expo & Final Prep",[step("Online Day 7 module complete","Before shift."),step("Food running policy","Hot food hot, cold food cold, correct table, limited expo communication."),step("Tray service","Large and small tray handling."),step("Plate presentation","Clean edge, entree facing guest, picture perfect."),step("Final assessment","Complete and review.")]),day("Manager Wait",[step("Manager wait checklist","Greet, commitment card, loyalty, specials, drink/app suggestions, 2 min/2 bites, dessert, to-go margarita, review card, payment."),step("Final sign-off","Certified or retraining assigned.")])],
+"Host":[day("Orientation",[step("Onboarding complete","Paperwork, apps, availability, restaurant tour."),step("Uniform/professionalism","Reviewed with manager.")]),day("Day 1 — Host Foundation",[step("Table numbers/floor chart","Walk table numbers and combinations."),step("Server rotation","Fair rotation, booth requests, server readiness."),step("Guest greetings","Warm language, party count phrasing, kids questions, rooftop/patio question."),step("Escorting/departing","Comfortable pace, small talk, goodbye.")]),day("Day 2 — Phones & Hospitality",[step("Phone greeting","Thank you for calling Huey Luey's in location..."),step("Hold procedure","Ask permission, Park 1/Park 2."),step("Reservations/call ahead","Location policy and manager handoff."),step("Side work","Restrooms every 20 minutes, front door glass, clean menus."),step("Large parties","12+ notify management, 20+ usually need 2 servers.")]),day("Day 3 — Waitlist & Toast Table",[step("Host positions","Door, Coordinator, Floor/Seater."),step("Wait time calculation","2 minutes per name, quote in 5-minute increments."),step("Long wait strategy","First available, patio, bar/rooftop 21+, split large parties."),step("Toast Table functions","Waitlist, seat walk-in, move table, mark dirty/available."),step("Physical waitlist","Party size, name, phone, time in, quote, seated, requests.")]),day("Day 4 — Menus & Toast Employee Functions",[step("Menu types","Main, drink, kids, lunch, brunch, gluten free, holiday, catering."),step("Server roster","Add/cut server and assign sections."),step("Specials","Daily/event specials.")]),day("Manager Wait",[step("Host manager wait","Door, immediate greet, warm/friendly, quoted wait, seating pace, polite conversation, clean entry/host stand."),step("Final sign-off","Certified or retraining assigned.")])],
+"Bartender":[day("Orientation",[step("Bar tour","Where everything is stored in bar, dry storage, walk-in."),step("Uniform and expectations","Bar and rooftop standards.")]),day("Day 1 — Margarita & Service Bar",[step("Margarita recipes","Circle menu and cheat sheet."),step("Rims/mixers/garnishes","Salt, sugar, tajin, agave, juices, fruits."),step("Glassware and jiggers","No free pouring."),step("Carding","Government photo ID, 35 and under."),step("Margarita quiz","Trainer quizzes margaritas.")]),day("Day 2 — Liquor Knowledge",[step("Bar vocabulary","Build, jigger, float, neat, rocks, mock, etc."),step("Tequila/mezcal","Categories and brands."),step("Liquor 101","Brandy, cordials, gin, rum, vodka, whiskey."),step("Signature cocktail quiz","Trainer quizzes.")]),day("Day 3 — Beer & Wine",[step("Beer 101","Ales, lagers, sour beers, domestic/import."),step("Wine 101","White, red, rose, sparkling."),step("Terminology","ABV, IBU, hops, tannins, varietal, vintage."),step("Keg change","Review procedure.")]),day("Day 4 — Duties, Cleanliness & Laws",[step("Infusions","Pineapple tequila and jalapeno tequila."),step("Opening/running/closing duties","Restocking, batch making, FIFO."),step("Cleaning","Counters, bottles, gaskets, drains, pests prevention."),step("Liquor laws","No intoxicated/underage service; 21+ bar/rooftop."),step("Final test","Questions and drink builds.")]),day("Manager Wait",[step("Bar manager wait","Greet, multitasking, specials, margarita, app, chips/salsa ask, timing, mason jars, cash handling."),step("Final sign-off","Certified or retraining assigned.")])],
+"To-Go":[day("Core Rules",[step("Third-party bag rule","Uber Eats, DoorDash, Grubhub always stapled closed."),step("Phone/online check rule","Do not staple; guest checks order."),step("Standard portions","Dressings, cheese dips, salsas primarily 5.5 oz."),step("Bag setup","Stamp logo + ticket; add promos."),step("Liquids","Separate white bag."),step("Parchment wrap","Tacos, quesadillas, avocado rolls, taquitos, fries, birria fries, tortillas.")]),day("Menu Packaging",[step("Sauce rules","Cheese/ground beef no chili gravy; chicken/veggies salsa verde; others ranchero."),step("Chips/salsa ratio","1 chips + 1 salsa per 2 entrees; app chips by app."),step("To-go margaritas","Food purchase, 2 max per entree, ID always."),step("Combos","Ask protein; Combo 2/3 no sides unless added; ask queso type."),step("Nachos","Always ask protein/queso type; chorizo only Perfect Nachos.")]),day("Advanced Detail",[step("Burritos/enchiladas","Sauces, sides, queso prompts."),step("Fajitas","Separate pans, salad, rice/beans, butter, lime."),step("Quesadillas/entrees/kids/desserts/sides","Packaging and garnish rules.")]),day("Certification",[step("Sample order accuracy test","Trainer/manager checks packaging."),step("Guest handoff","Name/phone, loyalty, upsell, check order."),step("Final sign-off","Certified or retraining assigned.")])]
+}}
+function builtDocs(){return{
+"Orientation Manual":`# ORIENTATION MANUAL
+
+## Welcome and Setup
+- Message from founder
+- Introduction of management, trainers, and team
+- Complete new hire paperwork
+- Fill out training schedule dates and times
+- Download apps
+- Fill out unavailability
+- Request off days
+- Review online training module and assessment timeline
+- Review company history, Our Pledge, commitment to every table, uniform standards, and restaurant information
+
+## New Hire Onboarding
+ADP Onboarding:
+- Check email for two ADP/Cheeseburger Bobby's emails.
+- Use code and username to complete W-4, emergency contact, availability, and handbook acknowledgement.
+- Direct deposit in ADP does not work. Fill out paper form provided.
+
+Toast:
+- Use Toast activation email.
+- No need to download Toast app.
+- Employee ID / clock-in code is last 4 digits of SSN.
+
+GroupMe:
+- Download GroupMe and join New Hire Group Chat.
+- Calling out still requires calling the restaurant and following company policy.
+
+Sling:
+- Join Sling scheduling app.
+- Input unavailability and request days off.
+
+## Policies
+- Schedules are posted on Sling.
+- Requested days off require 2 weeks notice.
+- Availability changes are not allowed in the first 90 days and may take up to 2 weeks once approved.
+- Payroll week runs Monday through Sunday. Pay periods are bi-weekly. Paychecks available Fridays.
+- No eating on the clock unless approved.
+- No ordering food one hour before close.
+- Call store and speak to manager if late. Do not privately message manager or use group chat.
+- Sick call-outs require calling at least two hours before shift and talking to manager on duty.
+
+## Professionalism
+- We are always on stage for guests.
+- Uniform must be clean, tucked, complete, and ready upon entry.
+- Conversations at work must be conversations that matter.
+- Always find a way to say YES to the guest.
+
+## Safety and Sanitation
+- Report all accidents and unsafe conditions to MOD immediately.
+- Wash hands for at least 20 seconds.
+- Remove apron before restroom.
+- Perform restroom check and double hand washing.
+- Guests always have the right-of-way.
+- Never use glass to scoop ice.
+- Ice scoop stored outside ice bin.
+- Sanitizer water changed every 2 hours.
+- Temperature danger zone is 41°F to 140°F.
+- Keep hot food hot and cold food cold.
+
+## Forms Included
+- Employee Availability Sheet
+- Employee Commitment Form
+- Direct Deposit Authorization
+- Training Schedule`,
+"Server Training Manual":`# SERVER TRAINING MANUAL
+
+## Online Module Timeline
+- Online Training Day 1 Module at home before Day 1.
+- Day 1 assessments at restaurant.
+- Online Training Day 2 Module before Day 2.
+- Day 2 assessments at restaurant.
+- Continue through Day 6.
+- Online Manager Wait Module before Manager Wait.
+- Day 7 assessments before Manager Wait.
+- Manager emails modules at end of each day beginning at Orientation.
+
+## Day 1 — Overview
+Complete prior to shift:
+- Uniforms
+- Complete Online Training Day 1 Module
+- Study floor chart: table numbers and seat numbers
+- Review Day 1 classroom
+- Review appetizers, soups, and salads
+
+Classroom:
+- 5-Star Greet
+- Commitment Card
+- Time Standards
+- Steps of Service
+- Table manicuring and pre-bussing
+- Ticket writing
+- Floor chart and pivot points
+- Reading back guest orders
+
+Hands-on:
+- Follow trainer 100%
+- Observe commitment card and 5-Star Greet
+- Use order book and write orders as trainer takes them
+
+## 5-Star Greet
+1. Greet within 45 seconds.
+2. Ask if guest has dined with us before.
+3. Feature 2 signature entrees.
+4. Feature 2 drinks by name.
+5. Ask if they want an appetizer by name.
+
+## Time Standards
+- 45 seconds: greet
+- 1 minute: chips and salsa
+- 2 minutes: non-alcoholic drinks
+- 5 minutes: bar drinks
+- 6 minutes: appetizers
+- 12 minutes: lunch
+- 18 minutes: dinner
+- 2 minutes or 2 bites: check food
+- 5 minutes: dessert
+- 1 minute: check presentation and payment pickup
+
+## Day 2 — POS and Payments
+- Reading back guest orders
+- Ringing in orders correctly
+- Stay / Send / Done
+- Split checks for parties of 6+ before sending to kitchen
+- Auto gratuity for parties of 8+
+- Running payments
+- Splitting payments
+- Adding tips
+- Server shift reviews and tip out
+
+## Day 3 — Bar Knowledge
+- Tequila
+- Mezcal vs tequila
+- Margarita rims
+- Glassware
+- Garnishes
+- Quick bar terms
+- To-go margaritas
+- Carding
+
+## Day 4 — Special Requests
+- Prompt questions
+- Allergies
+- Vegetarian items
+- Gluten free items
+- Secret menu
+- Always inform manager before ringing allergy check.
+
+## Day 5 — Sauces, Dressings, Proteins
+- Cheese dip / classic queso
+- Spicy queso
+- Cilantro cream
+- Guacamole
+- Salsa, mild salsa, salsa verde
+- Ranchero
+- Tequila cream
+- Dressings
+- Proteins
+
+## Day 6 — Salesmanship
+- Premium verbiage
+- Suggestive selling
+- Upselling
+- Loyalty program
+- Treasure chest
+- Review cards
+- Secret shop
+
+## Day 7 — Expo and Tray Service
+- Food running policy
+- Large tray service
+- Small tray service
+- Organization and consolidation
+- Plate presentation
+- Every plate picture perfect
+- 1-inch edge belongs to guest
+- Entree faces guest
+
+## Manager Wait
+Checklist includes:
+- 45-second greet
+- Commitment card
+- First-time guest question
+- Loyalty program
+- Specials/features
+- Margarita suggestion
+- Appetizer by name
+- Menu questions
+- Beverage timing
+- Side plates
+- Correct food
+- 2 minutes/2 bites
+- Refills
+- Dessert by name
+- To-go margarita
+- Pre-bussing
+- Review card
+- Payment speed
+- Thank by name
+- Invite back`,
+"Host Training Manual":`# HOST TRAINING MANUAL
+
+## Day 1 — Overview
+Classroom:
+- Table numbers and floor chart
+- Server rotation
+- Guest interactions
+- Greeting options
+- Escorting guest suggestions
+- Departing guest suggestions
+
+Hands-on:
+- Table numbers
+- Server rotation
+- Guest interaction roleplay
+- Dress code
+
+## Day 1 Classroom
+Server Rotation:
+- Keep rotation fair.
+- Know what to do when guest requests different table.
+- Know if a server is ready for another table.
+
+Guest Greetings:
+- "It is so nice to see you all tonight. Thank you for coming in today."
+- "Welcome to Huey Luey's. We are so happy you are joining us tonight."
+- Avoid "just one."
+- Ask about high chair, booster, sling, kids menus.
+- Ask about rooftop/patio when open.
+- Try to seat tables, not only booths.
+
+Escorting:
+- Make polite conversation.
+- Ask if they have dined with us before.
+- Mention specials or promotions.
+- Bring menus back from holders/server/bar stations.
+
+Departing:
+- Thank guests and invite them back.
+- If guest is upset, grab manager immediately.
+
+## Day 2 — Phones and Hospitality
+Phone:
+"Hello, thank you for calling Huey Luey's in ________. This is ____. How may I help you?"
+
+Hold:
+- Ask permission before placing on hold.
+- Use Park 1 or Park 2 so manager can pick up from any phone.
+
+Hospitality:
+- Big hellos and big goodbyes.
+- Hold door for guests.
+- Guest-first mentality.
+- Start conversations around mints, specials, weather, music.
+
+Side Work:
+- Restrooms cleaned every 20 minutes.
+- Front door glass clean.
+- Menus clean and presentable.
+- Guest perspective first.
+
+Large Parties:
+- Notify management for parties of 12+.
+- Parties of 20+ usually require 2 servers.
+
+## Day 3 — Waitlist and Toast Table
+Positions:
+- Door: greets, takes names, determines wait time.
+- Coordinator: runs seating chart, notifies guests, answers phone.
+- Floor/Seater: seats guests, menu runs, restroom checks, communicates open/dirty tables.
+
+Wait Time:
+- 2 minutes per name.
+- Quote in 5-minute increments.
+- Use judgment for large parties.
+
+Long Wait:
+- Offer First Available.
+- Offer patio when available.
+- Offer bar/rooftop if 21+.
+- Split large parties into nearby tables when needed.
+
+Toast Table:
+- Add waitlist guest
+- Seat walk-in
+- Seat waitlist guest
+- Move table
+- Mark dirty
+- Mark available
+
+Details That Matter:
+- Wait for guest to sit before placing menus.
+- Grab door.
+- Do not leave host stand unattended too long.
+- Tell server if sitting outside section or outside.
+- Rooftop and bar counter are 21+.
+
+## Day 4 — Menus and Employee Functions
+Menus:
+- Main
+- Drink
+- Kids
+- Lunch
+- Brunch
+- Gluten free
+- Holiday
+- Catering
+
+Toast Employee Functions:
+- Add server to shift
+- Assign server sections
+- Server rotation
+- Cut a server
+- Specials
+
+## Manager Wait
+Checklist includes:
+- Open door
+- Immediate greet
+- Warm and friendly
+- Quoted wait accuracy
+- Comfortable walk pace
+- Polite conversation
+- Wait for guests to sit before menus
+- Wish guests to enjoy meal
+- Clean table/chairs/floor
+- Remove extra silverware
+- Clean front entry
+- Clean host stand
+- Thank/invite back`,
+"Bar Training Manual":`# BARTENDER TRAINING MANUAL
+
+## Uniform / Setup
+- Black long sleeve button-up shirt in fall/winter.
+- Black polo in spring/summer.
+- Black pants, black belt, black non-slip shoes, name tag.
+- Black apron optional.
+- Rooftop follows same standard unless special events differ.
+- New team member receives bar tour, training manual, drink menu.
+
+## Bar Vocabulary
+Blend, bruised, building a drink, chaser, cocktail, dirty, double, dry, float, free pour, garnish, jigger, last call, mixer, mock, muddle, neat, on the rocks, premium, rim, shooter, shot, speed rack, straight up, tall, top shelf, twist, up, well drink.
+
+## Day 1 — Margarita and Service Bar
+Complete:
+- Study margarita recipes.
+
+Classroom:
+- Margarita rims
+- Mixers
+- Garnishes
+- Glassware
+- Jiggers
+- Carding
+
+Hands-on:
+- Service bar training
+- Margarita rims, glassware, garnishes, procedures
+- Trainer quiz on margaritas
+- Make drinks in service well
+- Carding practice
+
+## Margarita Rims
+- Salt: kosher salt
+- Sugar: traditional white sugar
+- Tajin: mild chili, lime, sea salt
+- Others/seasonal: cinnamon sugar, green sugar, etc.
+
+## Jiggers
+- Jiggers measure liquor, mixers, and everything in between.
+- Never free pour. No exceptions.
+
+## Carding
+- Card anyone who looks 35 and under.
+- Accept government photo ID with birth date and expiration.
+- Paper ID or phone ID not acceptable.
+- When in doubt, grab manager.
+
+## Day 2 — Liquor Knowledge
+- Tequila
+- Agave syrup
+- Mezcal vs tequila
+- Brandy
+- Cordials
+- Gin
+- Rum
+- Tequila
+- Vodka
+- Whiskey
+- Signature cocktail quiz
+
+## Day 3 — Beer and Wine
+- Ale
+- Lager
+- Sour beers
+- White wine
+- Red wine
+- Rose
+- Sparkling wine
+- Beer and wine terminology
+- Keg change
+
+## Day 4 — Duties, Cleanliness, Laws
+- Infused tequila
+- Opening, running, closing duties
+- Daily cleaning
+- Deep cleaning
+- Multitasking
+- Liquor laws and policies
+- Secret shop
+- Bar final test
+
+## Misc Bar Info
+- Bar counter and rooftop are 21+.
+- Ring drinks before making them.
+- Place guest receipt in mason jar after each order.
+- Ask if bar guest wants appetizer by name.
+- Ask if they want chips and salsa; do not waste them.
+
+## Liquor Laws
+Do not:
+- Serve alcohol to intoxicated person.
+- Serve alcohol to underage person.
+- Allow anyone under 21 to sit at bar counter.
+
+## Final Test
+Questions:
+- Difference between blanco, reposado, and añejo.
+- Is mezcal tequila?
+- Name 5 tequila brands.
+- Sweet margarita suggestion.
+- What is agave?
+- What beers get a lime?
+- Ale vs lager.
+- Ounces in pint.
+- How to cut someone off.
+- Ounces in standard wine glass.
+- Dirty martini.
+- Neat.
+- Strong drink request.
+- Mocktail.
+Build:
+- Texas Margarita
+- Beach Bum
+- Skinny Margarita
+- Pineapple Margarita
+- Mojito
+- Espresso Martini
+- Bloody Mary
+- Michelada
+
+## Manager Wait
+Checklist includes:
+- 45-second greet
+- Commitment card
+- Loyalty
+- Multitasking
+- Specials
+- Margarita suggestion
+- Appetizer by name
+- Ask chips and salsa
+- Menu knowledge
+- Beverage timing
+- Clean glassware
+- Side plates
+- Food correct
+- 2 minutes/2 bites
+- Dessert
+- To-go margarita
+- Ring drinks before making
+- Mason jars
+- Review card
+- Payment speed
+- Cash payments into drawer
+- Bar clean of debris/personal items`,
+"To-Go Specialist Manual":`# TO-GO SPECIALIST FOOD MANUAL
+
+## Core Rules
+Orders and Packaging:
+- 3rd Party Apps (Uber Eats, DoorDash, Grubhub) always staple bags closed.
+- Phone / Online Orders do not staple. Have guest check order.
+
+Standard Portions:
+- Spicy queso is default queso.
+- Dressings, cheese dips, and salsas primarily come in 5.5 oz cups.
+
+Bag Setup:
+- Stamp bag with Huey Luey's logo and ticket.
+- Add promotional materials if needed.
+- Liquids go in white bag for spill protection.
+
+Steam-Sensitive Items:
+- Wrap tacos, quesadillas, avocado rolls, taquitos, French fries, birria fries, and tortillas in parchment.
+
+Sauce Rules:
+- Cheese / ground beef: no chili gravy.
+- Chicken / veggies: salsa verde.
+- All others: ranchero.
+
+Menu Keywords:
+- "Texas" means steak, chicken, shrimp.
+- "Fajita" means grilled onions and peppers.
+
+Chips and Salsa:
+- 1 chips + 1 salsa per 2 entrees.
+- Apps requiring chips: 1 per app for cheese dip, guac, ultimate, 3 Amigos.
+
+Tortillas:
+- Flour, corn, hard shell, lettuce upcharge.
+- Rolled in parchment and placed in salsa bag.
+
+Silverware:
+- Monday-Friday mornings: 1 per entree.
+
+Required Habits:
+- Mark off orders with pen.
+- Add name and phone before ringing.
+- Upsell apps, desserts, margaritas.
+- Ask about loyalty program.
+
+## To-Go Margaritas
+- Must have food purchase.
+- 1 entree = 2 margaritas max.
+- Check ID always.
+- Place margaritas at bottom of bag.
+
+## Beverages
+- Fill with ice and lid.
+- Seal straw hole with sticker.
+- Straw goes in salsa bag.
+
+## Appetizers
+Ultimate Dip:
+- 3 tortillas included.
+
+Guacamole:
+- Garnish with radish.
+
+Avocado Rolls:
+- Cilantro cream dressing.
+
+Taquitos:
+- To-Go grabs taquitos separate.
+- Pan: lettuce, pico, sour cream.
+- Separate containers: queso and salsa verde.
+
+Birria Fries:
+- Pan: fries and brisket.
+- Cup: pickled onions, jalapenos, cilantro.
+- Side: queso.
+
+Three Amigos:
+- Guacamole has radish garnish.
+- Street corn has lime garnish.
+
+## Chicken Tortilla Soup
+- Bowl: 2 avocado slices and tortilla strips.
+- Cup: 1 avocado slice and strips.
+- Toppings in 8 oz container separate from soup.
+
+## Salads
+- Taco Salad: third pan + cilantro ranch.
+- Mexican Chopped: mango vinaigrette + quesa crisp.
+- Farmer's Kale: oregano vinaigrette + quesa crisp.
+
+## Combos
+- Always ask protein.
+- Big Huey, Combo 4, Combo 5: Mexican rice and refried beans.
+- Combo 2 and Combo 3: no sides unless added.
+- Big Huey and Combo 5: ask queso type, push spicy.
+- Same protein only for Big Huey, Combo 2, Combo 3.
+
+## Tacos
+- Birria tacos: 1 side Mexican rice + consume broth.
+- Signature 3: ask which 2 tacos guest wants.
+- Only 1 side total.
+- Fish taco: lime garnish.
+- Gringo/Fajita tacos: ask queso, push spicy.
+- A la carte tacos: lettuce, cheese, sour cream.
+
+## Fiesta Bowls
+- Always ask protein.
+- Always ask queso type, push spicy.
+
+## Nachos
+- Always ask protein.
+- Nachos Supreme: pan 1 chips, cheddar, protein, refried beans. Pan 2 lettuce, tomato, sour cream, jalapenos. Side queso.
+- Perfect Nachos: pan chips, cheddar, protein, chorizo. Sides pico, sour cream, guac, queso.
+- Always ask queso type.
+- Confirm chorizo only applies to Perfect Nachos.
+
+## Burritos
+- Always ask protein.
+- Baja: ranchero, 1 side Mexican rice, ask queso.
+- Luey's: cheese dip on top, 2 sides Mexican rice and charro beans, ask queso.
+- Texas Fajita: ranchero + melted cheese, 2 sides Mexican rice and charro beans.
+- Veggie: regular queso + salsa verde, cilantro lime rice and black beans.
+
+## Enchiladas
+- Cheese/beef: chili gravy.
+- Chicken: salsa verde.
+- Mexican Flag: salsa verde + chili gravy + cheese dip, ask queso.
+- Packaging: pan 1 enchiladas, rice, beans. Pan 2 lettuce, pico, sour cream.
+
+## Fajitas
+Durango:
+- Bacon bits, jalapenos, queso.
+- Ask queso type, push spicy.
+
+Huey's Style:
+- Tequila cream sauce from expo cooler, heat 20 seconds, salsa bag.
+- Mushrooms + shrimp on fajitas.
+
+All Fajitas:
+- Tortillas
+- Fajita salad separate
+- Rice and charro beans separate
+- Fajitas separate
+- Garlic foamy butter in salsa bag
+- Lime garnish
+
+Special:
+- Texas: bacon-wrapped shrimp, confirm.
+- Veggie: no butter, cilantro lime rice and black beans.
+
+## Quesadillas
+- Fajita / 3 Cheese / Buffalo / Veggie: lettuce, pico, sour cream.
+- 3 Cheese / Buffalo / Veggie: cilantro ranch.
+- Birria: consume broth only.
+
+## Entrees
+- Tequila Steak: tequila cream sauce warmed in salsa bag; chipotle mashed potatoes and Mexican turnip greens.
+- Pollo Ranchero: on fire roasted veggies; Mexican rice and charro beans.
+- Stuffed Chicken Breast: fried, queso ask type, Mexican rice and charro beans.
+- Honey Chipotle Salmon: cilantro lime rice and black beans.
+- Chimichanga: queso ask type; Mexican rice and refried beans.
+
+## Kids
+- Always ask protein. Drinks optional.
+- Chicken tenders + fries: ketchup in 1.5 oz.
+- Mac & Cheese: expo cooler, heat 1 min, 8 oz.
+- Pineapple: expo cooler, 5.5 oz.
+- Kids fiesta bowl: no side + regular queso.
+
+## Desserts
+- Tres Leches: walk-in cooler, cherry + mint.
+- Brownie: cooler, heat 1 min, chocolate/caramel 1.5 oz, ice cream 3 scoops in 8 oz, foil wrap.
+- Sopapillas: expo freezer, kitchen fries, cinnamon sugar, honey 1.5 oz.
+- Flan: walk-in cooler, mint.
+
+## Sides
+- Cilantro lime rice: cilantro garnish.
+- Black beans: pico garnish.
+- Street corn: lime garnish.
+- French fries: ketchup 1.5 oz.
+- Pineapple: 8 oz from expo cooler.`
+}}
+function builtForms(){return[
+{id:"welcome",type:"Email",title:"Welcome New Hire Email",subject:"Welcome to Huey Luey's Training",body:"Hi {{firstName}},\n\nWelcome to Huey Luey's! We are excited to have you join the team.\n\nBefore your first training shift, please complete onboarding, set up GroupMe and Sling, review your orientation information, and come in full uniform ready to learn.\n\nYour assigned trainer is {{trainer}}. Your first position packet is {{position}}.\n\nThank you,\nHuey Luey's Management"},
+{id:"module",type:"Email",title:"Daily Module Reminder",subject:"Huey Luey's Training Module Reminder",body:"Hi {{firstName}},\n\nPlease complete your assigned online training module before your next training shift.\n\nCurrent stage: {{stage}}\nPosition: {{position}}\nTrainer: {{trainer}}\n\nLet a manager know immediately if you did not receive the module link.\n\nThank you,\nHuey Luey's Management"},
+{id:"needs-review",type:"Email",title:"Needs Review / Coaching Follow-Up",subject:"Training Follow-Up",body:"Hi {{firstName}},\n\nWe want to follow up on your current training progress. You are currently on {{stage}} for {{position}} training.\n\nPlease focus on the notes reviewed by your trainer/manager before the next shift. We will continue coaching you and want to help you succeed.\n\nThank you,\nHuey Luey's Management"},
+{id:"certified",type:"Email",title:"Training Completed / Certified",subject:"Training Completed",body:"Hi {{firstName}},\n\nCongratulations! You have completed your {{position}} training path and final manager sign-off.\n\nThank you for your effort and welcome fully to the Huey Luey's team.\n\nHuey Luey's Management"},
+{id:"availability",type:"Form",title:"Employee Availability Sheet",subject:"Employee Availability Form",body:"Employee Availability Sheet\n\nName: {{fullName}}\nPhone: {{phone}}\nEmail: {{email}}\nDate: {{date}}\n\nMonday AM/PM:\nTuesday AM/PM:\nWednesday AM/PM:\nThursday AM/PM:\nFriday AM/PM:\nSaturday AM/PM:\nSunday AM/PM:\n\nThis is my availability starting __________ continuing until further notice. I agree to work my stated availability unless requested otherwise. If there is a change, I will notify a manager in an appropriate amount of time and sign a new form.\n\nSignature: _________________________"},
+{id:"commitment",type:"Form",title:"Employee Commitment Form",subject:"Employee Commitment Form",body:"Huey Luey's Employee Commitment Form\n\nEmployee: {{fullName}}\nPosition: {{position}}\nDate of Hire: {{hireDate}}\n\nI commit to integrity and work ethic, guest-first mentality, teamwork, punctuality, professional appearance and attitude, focus on guests, separating personal and professional life, service excellence, policies and procedures, health and safety, and continuous improvement.\n\nEmployee Signature: _________________________\nManager Signature: _________________________\nDate: _________________________"},
+{id:"schedule",type:"Form",title:"Training Schedule",subject:"Training Schedule",body:"Training Schedule\n\nName: {{fullName}}\nPosition: {{position}}\nTrainer: {{trainer}}\n\nOrientation: Date/Time/Trainer\nTraining Day 1: Date/Time/Trainer\nTraining Day 2: Date/Time/Trainer\nTraining Day 3: Date/Time/Trainer\nTraining Day 4: Date/Time/Trainer\nTraining Day 5: Date/Time/Trainer\nTraining Day 6: Date/Time/Trainer\nTraining Day 7: Date/Time/Trainer\nManager Wait: Date/Time/Manager"},
+{id:"serverwait",type:"Manager Wait",title:"Server Manager Wait Checklist",subject:"Server Manager Wait",body:"Server Manager Wait Checklist\n\nServer: {{fullName}}\nManager: __________________ Date: {{date}}\n\nDid server greet within 45 seconds?\nDid server introduce themselves?\nDid they give commitment card?\nDid they ask if it was first time?\nDid they mention loyalty program?\nDid they mention specials/features/promotions?\nDid they suggest margarita?\nDid they offer appetizer by name?\nCould they answer menu questions?\nDid beverage arrive correctly and on time?\nWere side plates brought if needed?\nDid food come out correctly?\nDid they check after 2 minutes or 2 bites?\nDid they offer refills?\nDid they offer dessert by name?\nDid they offer to-go margarita?\nDid they pre-bus?\nDid they mention review card?\nWas check dropped appropriately?\nWas payment quick?\nDid they thank guest by name when using card?\nWere guests sincerely thanked/invited back?\n\nComments:\n\nManager Sign-Off: __________________"},
+{id:"hostwait",type:"Manager Wait",title:"Host Manager Wait Checklist",subject:"Host Manager Wait",body:"Host Manager Wait Checklist\n\nHost: {{fullName}}\nManager: __________________ Date: {{date}}\n\nDid host open the door?\nWere guests greeted immediately?\nWas host well-groomed and neat?\nWas host warm and friendly?\nWere guests seated within quoted time?\nDid host walk at comfortable pace?\nDid host make polite conversation?\nDid host wait for everyone to sit before menus?\nDid host wish guests to enjoy lunch/dinner?\nWere table/chairs/floor clean?\nWere extra silverware removed?\nWas front entry clean?\nWas host stand clean?\nWere guests thanked/invited back?\n\nComments:\n\nManager Sign-Off: __________________"},
+{id:"barwait",type:"Manager Wait",title:"Bar Manager Wait Checklist",subject:"Bar Manager Wait",body:"Bar Manager Wait Checklist\n\nBartender: {{fullName}}\nManager: __________________ Date: {{date}}\n\nDid bartender greet within 45 seconds?\nDid bartender introduce themselves?\nDid they give commitment card?\nDid they ask first-time guest question?\nDid they mention loyalty program?\nWas multitasking observed?\nDid they mention specials/features?\nDid they suggest margarita?\nDid they offer appetizer by name?\nDid they ask if guest wanted chips and salsa?\nCould they answer menu questions?\nWas beverage correct and timely?\nWas glass clean/free of spots?\nDid they offer dessert?\nWere to-go margaritas mentioned?\nDid they ring drinks before making them?\nWere mason jars used and updated?\nWas payment processed quickly?\nWere cash payments placed in drawer?\nWas bar clean of debris and personal items?\n\nComments:\n\nManager Sign-Off: __________________"},
+{id:"barfinal",type:"Quiz/Form",title:"Bartender Final Test",subject:"Bartender Final Test",body:"Bartender Final Test\n\nName: {{fullName}}\nDate: {{date}}\n\n1. What is the difference between blanco, reposado, and añejo tequila?\n2. Is mezcal a tequila?\n3. Name 5 tequila brands.\n4. If someone asks for a sweet margarita, what would you suggest?\n5. What is agave?\n6. What beers get a lime?\n7. Difference between ale and lager?\n8. How many ounces are in a pint?\n9. How do you cut someone off from drinking?\n10. How many ounces in a standard glass of wine?\n11. What makes a dirty martini dirty?\n12. What does neat mean?\n13. If someone wants a strong drink, what do you do?\n14. What is a mocktail?\n\nBuild: Texas Margarita, Beach Bum, Skinny Margarita, Pineapple Margarita, Mojito, Espresso Martini, Bloody Mary, Michelada."}
+]}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw)state={...defaultState(),...JSON.parse(raw)}}catch(e){state=defaultState()} if(!state.trainees.length)seedInitial(); initVault()}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));renderAll()}
+function seedInitial(){const a=makeTrainee({firstName:"Alex",lastName:"Martinez",email:"alex@example.com",position:"Server",location:"Acworth",assignedTrainer:"Marlon",status:"In Training",hireDate:today(),startDate:today(),hireNotes:"Demo trainee. Replace with real employees."});const b=makeTrainee({firstName:"Jamie",lastName:"Parker",email:"jamie@example.com",position:"Host",location:"Acworth",assignedTrainer:"Ally",status:"Needs Review",hireDate:today(),startDate:today(),hireNotes:"Needs extra waitlist practice."});markSome(a,8);markSome(b,5);state.trainees=[a,b];state.notes=[{id:uid("note"),traineeId:b.id,type:"Red Flag",author:"Tyler",date:today(),text:"Needs manager review before moving past Day 3 waitlist practice."},{id:uid("note"),traineeId:a.id,type:"Positive Feedback",author:"Marlon",date:today(),text:"Strong 5-Star Greet. Keep working on POS speed."}];localStorage.setItem(KEY,JSON.stringify(state))}
+function makeTrainee(d){return{id:d.id||uid("trainee"),firstName:d.firstName||"",lastName:d.lastName||"",phone:d.phone||"",email:d.email||"",position:d.position||"Server",location:d.location||"Acworth",hireDate:d.hireDate||"",startDate:d.startDate||"",assignedTrainer:d.assignedTrainer||"",status:d.status||"Not Started",hireNotes:d.hireNotes||"",createdAt:new Date().toISOString(),steps:JSON.parse(JSON.stringify(state.paths[d.position]||[])),scores:{attendance:"",uniform:"",menu:"",guest:"",pos:"",speed:"",accuracy:"",communication:"",cleanliness:"",teamwork:"",confidence:"",readiness:""}}}
+function markSome(t,n){let flat=t.steps.flatMap(d=>d.steps);flat.slice(0,n).forEach(s=>{s.status="Complete";s.score=4;s.trainer=t.assignedTrainer;s.date=today()});if(flat[n]){flat[n].status="In Progress";flat[n].score=3}}
+function buildNav(){const mk=i=>`<button class="${activeView===i[0]?"active":""}" onclick="setView('${i[0]}')"><span>${i[1]}</span><small>${i[2]}</small></button>`;document.getElementById("nav").innerHTML=navItems.map(mk).join("");document.getElementById("mobileNav").innerHTML=navItems.map(i=>`<button class="${activeView===i[0]?"active":""}" onclick="setView('${i[0]}')">${i[1]}</button>`).join("")}
+function setView(v){activeView=v;document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.getElementById("view-"+v).classList.add("active");buildNav();renderAll()}
+function populate(){document.getElementById("filterPosition").innerHTML='<option value="">All Positions</option>'+state.positions.map(p=>`<option>${esc(p)}</option>`).join("");["position","trainerPosition"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=state.positions.map(p=>`<option>${esc(p)}</option>`).join("")});document.getElementById("assignedTrainer").innerHTML='<option value="">Unassigned</option>'+state.trainers.map(t=>`<option>${esc(t.name)}</option>`).join("");document.getElementById("sendTrainee").innerHTML='<option value="">Select trainee for email/form</option>'+state.trainees.map(t=>`<option value="${t.id}">${esc(t.firstName)} ${esc(t.lastName)} — ${esc(t.position)}</option>`).join("")}
+function completion(t){const flat=t.steps.flatMap(d=>d.steps);return flat.length?Math.round(flat.filter(s=>s.status==="Complete").length/flat.length*100):0}
+function currentStage(t){for(const d of t.steps){if(d.steps.some(s=>s.status!=="Complete"))return d.title}return"All Steps Complete"}
+function flagsFor(t){let f=[];const ns=state.notes.filter(n=>n.traineeId===t.id);if(ns.some(n=>/red|attendance|skill/i.test(n.type)))f.push("Manager Note");if(t.status==="Needs Review")f.push("Needs Review");if(completion(t)<35&&["In Training","Needs Review"].includes(t.status))f.push("Low Progress");if(t.steps.flatMap(d=>d.steps).some(s=>Number(s.score)>0&&Number(s.score)<=2))f.push("Low Score");return f}
+function lastNote(t){const ns=state.notes.filter(n=>n.traineeId===t.id).sort((a,b)=>String(b.date).localeCompare(String(a.date)));return ns[0]?.text||""}
+function badgeStatus(s){const m={"Certified":"bGreen","Ready for Manager Wait":"bBlue","Needs Review":"bYellow","Inactive":"bGray","Orientation":"bOrange","In Training":"bPurple","Not Started":"bGray"};return`<span class="badge ${m[s]||"bGray"}">${esc(s)}</span>`}
+function renderAll(){buildNav();populate();renderDashboard();renderPackets();renderDocs();renderForms();renderVault();renderTrainer();renderReports();renderSettings()}
+function renderDashboard(){const q=(document.getElementById("traineeSearch")?.value||"").toLowerCase(),fp=document.getElementById("filterPosition")?.value||"",fs=document.getElementById("filterStatus")?.value||"";const rows=state.trainees.filter(t=>{const blob=[t.firstName,t.lastName,t.email,t.phone,t.position,t.location,t.assignedTrainer,t.status,currentStage(t),lastNote(t)].join(" ").toLowerCase();return(!q||blob.includes(q))&&(!fp||t.position===fp)&&(!fs||t.status===fs)}).map(t=>{const pct=completion(t),fl=flagsFor(t);return`<tr><td><div class="nameCell"><div class="avatar">${esc(initials(t))}</div><div><b>${esc(t.firstName)} ${esc(t.lastName)}</b><small>${esc(t.email||t.phone||"No contact")}</small></div></div></td><td><span class="badge bOrange">${esc(t.position)}</span></td><td>${esc(t.location)}</td><td>${esc(t.assignedTrainer||"Unassigned")}</td><td>${esc(currentStage(t))}</td><td><div class="progress"><i style="width:${pct}%"></i></div><small style="font-weight:900;color:var(--soft)">${pct}%</small></td><td>${badgeStatus(t.status)}</td><td>${fl.length?fl.map(x=>`<span class="badge bRed">${esc(x)}</span>`).join(" "):'<span class="badge bGreen">Clear</span>'}</td><td style="max-width:250px">${esc(lastNote(t)).slice(0,90)}</td><td><button class="btn small" onclick="openProfile('${t.id}')">Open</button> <button class="btn light small" onclick="editTrainee('${t.id}')">Edit</button></td></tr>`}).join("");document.getElementById("traineeRows").innerHTML=rows||`<tr><td colspan="10"><div class="empty">No trainees match this view.</div></td></tr>`;const total=state.trainees.length,training=state.trainees.filter(t=>["Orientation","In Training"].includes(t.status)).length,ready=state.trainees.filter(t=>["Ready for Manager Wait","Needs Review"].includes(t.status)).length,cert=state.trainees.filter(t=>t.status==="Certified").length,flags=state.trainees.reduce((a,t)=>a+flagsFor(t).length,0),avg=total?Math.round(state.trainees.reduce((a,t)=>a+completion(t),0)/total):0;[["kTotal",total],["kTraining",training],["kReady",ready],["kFlags",flags],["kCertified",cert],["kAvg",avg+"%"],["sideTrainees",total],["sideDocs",Object.keys(state.docs).length]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v})}
+function renderPackets(){document.getElementById("packetCards").innerHTML=state.positions.filter(p=>state.paths[p]).map(p=>{const days=state.paths[p],steps=days.reduce((a,d)=>a+d.steps.length,0);return`<div class="packet"><h3>${esc(p)}</h3><p>${esc((state.docs[p+" Training Manual"]||state.docs[p+" Specialist Manual"]||"").split("\\n").slice(0,2).join(" ").replace(/#/g,"").slice(0,155)||"Position-specific training path.")}</p><div style="margin-top:10px;display:flex;gap:7px;flex-wrap:wrap"><span class="badge bGreen">${days.length} Stages</span><span class="badge bOrange">${steps} Sign-Offs</span></div><ul>${days.map(d=>`<li>${esc(d.title)}</li>`).join("")}</ul><button class="btn light full" style="margin-top:12px" onclick="activeDoc='${p==="To-Go"?"To-Go Specialist Manual":p+" Training Manual"}';setView('manuals')">Open Manual</button></div>`}).join("")}
+function renderDocs(){const q=(document.getElementById("docSearch")?.value||"").toLowerCase();const keys=Object.keys(state.docs).filter(k=>!q||k.toLowerCase().includes(q)||state.docs[k].toLowerCase().includes(q));document.getElementById("docNav").innerHTML=keys.map(k=>`<button class="${k===activeDoc?"active":""}" onclick="activeDoc='${esc(k)}';editDoc=false;renderDocView()">${esc(k)}<br><small style="font-weight:800;opacity:.7">${state.docs[k].split("\\n").length} lines</small></button>`).join("");renderDocView()}
+function mdToHtml(txt){let html="",inList=false;txt.split(/\n/).forEach(line=>{if(line.startsWith("# ")){if(inList){html+="</ul>";inList=false}html+=`<h3>${esc(line.slice(2))}</h3>`}else if(line.startsWith("## ")){if(inList){html+="</ul>";inList=false}html+=`<div class="docSection"><h4>${esc(line.slice(3))}</h4>`}else if(line.startsWith("- ")){if(!inList){html+="<ul>";inList=true}html+=`<li>${esc(line.slice(2))}</li>`}else if(line.trim()===""){if(inList){html+="</ul>";inList=false} if(html.endsWith("</ul>")){}else html+="</div>"}else{if(inList){html+="</ul>";inList=false}html+=`<p>${esc(line)}</p>`}});if(inList)html+="</ul>";return html}
+function renderDocView(){const title=activeDoc,txt=state.docs[title]||"";document.getElementById("editDocBtn").textContent=editDoc?"Save Manual":"Edit Current Manual";document.getElementById("docContent").innerHTML=editDoc?`<div class="docBody"><h3>Edit: ${esc(title)}</h3><textarea class="editor" id="docEditor">${esc(txt)}</textarea><div class="actions" style="margin-top:12px"><button class="btn orange" onclick="saveDocEdit()">Save Manual</button><button class="btn light" onclick="editDoc=false;renderDocView()">Cancel</button><button class="btn light" onclick="printDoc()">Print</button></div></div>`:`<div class="docBody"><div class="actions" style="justify-content:flex-start;margin-bottom:12px"><button class="btn light small" onclick="printDoc()">Print Manual</button><button class="btn orange small" onclick="openFormFromDoc()">Email Manual Text</button></div>${mdToHtml(txt)}</div>`}
+function toggleEditDoc(){if(editDoc)saveDocEdit();else{editDoc=true;renderDocView()}}function saveDocEdit(){state.docs[activeDoc]=document.getElementById("docEditor").value;editDoc=false;save();toast("Manual saved")}function printDoc(){const w=window.open("","_blank");w.document.write(`<!doctype html><title>${esc(activeDoc)}</title><body style="font-family:Poppins,Arial,sans-serif;padding:24px">${mdToHtml(state.docs[activeDoc]||"")}<script>setTimeout(()=>print(),200)<\/script></body>`);w.document.close()}
+function renderForms(){const q=(document.getElementById("formSearch")?.value||"").toLowerCase();document.getElementById("formsGrid").innerHTML=state.forms.filter(f=>!q||(f.title+" "+f.type+" "+f.body).toLowerCase().includes(q)).map(f=>`<div class="formCard"><h3>${esc(f.title)}</h3><p><span class="badge bOrange">${esc(f.type)}</span></p><p>${esc(f.body.slice(0,160))}...</p><div class="actions"><button class="btn orange small" onclick="openSendForm('${f.id}')">Open / Send</button><button class="btn light small" onclick="editForm('${f.id}')">Edit</button></div></div>`).join("")}
+function selectedTrainee(){const id=document.getElementById("sendTrainee").value;return state.trainees.find(t=>t.id===id)||state.trainees[0]||{}}
+function fillTemplate(s,t){return String(s||"").replaceAll("{{firstName}}",t.firstName||"").replaceAll("{{lastName}}",t.lastName||"").replaceAll("{{fullName}}",((t.firstName||"")+" "+(t.lastName||"")).trim()).replaceAll("{{email}}",t.email||"").replaceAll("{{phone}}",t.phone||"").replaceAll("{{position}}",t.position||"").replaceAll("{{location}}",t.location||"").replaceAll("{{trainer}}",t.assignedTrainer||"").replaceAll("{{stage}}",t.id?currentStage(t):"").replaceAll("{{date}}",today()).replaceAll("{{hireDate}}",t.hireDate||"")}
+function openSendForm(id){const f=state.forms.find(x=>x.id===id),t=selectedTrainee();if(!f)return;const sub=fillTemplate(f.subject,t),body=fillTemplate(f.body,t);document.getElementById("formModalTitle").textContent=f.title;document.getElementById("formModalBody").innerHTML=`<div class="field"><label>To / Trainee Email<input id="sendTo" value="${esc(t.email||"")}"></label></div><div class="field" style="margin-top:10px"><label>Subject<input id="sendSubject" value="${esc(sub)}"></label></div><div class="field" style="margin-top:10px"><label>Body<textarea class="clean" style="min-height:390px" id="sendBody">${esc(body)}</textarea></label></div><div class="actions" style="justify-content:flex-start;margin-top:12px"><button class="btn orange" onclick="mailtoCurrent()">Open Email Draft</button><button class="btn light" onclick="copySendBody()">Copy Body</button><button class="btn light" onclick="printSendBody()">Print</button></div><div class="note" style="margin-top:14px"><div class="noteTop"><b>Sending Note</b><small>Local Mode</small></div><p>This opens an email draft through your device. Automated Gmail sending will be wired later through Apps Script/Gmail after the backend URL is live.</p></div>`;document.getElementById("formModal").classList.add("open")}
+function mailtoCurrent(){const to=document.getElementById("sendTo").value,sub=document.getElementById("sendSubject").value,body=document.getElementById("sendBody").value;location.href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`}
+function copySendBody(){navigator.clipboard.writeText(document.getElementById("sendBody").value);toast("Copied")}
+function printSendBody(){const body=esc(document.getElementById("sendBody").value).replace(/\n/g,"<br>");const w=window.open("","_blank");w.document.write(`<body style="font-family:Poppins,Arial;padding:24px">${body}<script>setTimeout(()=>print(),200)<\/script></body>`);w.document.close()}
+function editForm(id){const f=state.forms.find(x=>x.id===id);document.getElementById("formModalTitle").textContent="Edit Form / Template";document.getElementById("formModalBody").innerHTML=`<div class="formGrid"><label>Title<input id="efTitle" value="${esc(f.title)}"></label><label>Type<input id="efType" value="${esc(f.type)}"></label><label class="wide">Subject<input id="efSubject" value="${esc(f.subject)}"></label><label class="wide">Body<textarea class="clean" style="min-height:390px" id="efBody">${esc(f.body)}</textarea></label><div class="wide actions"><button class="btn orange" onclick="saveFormEdit('${id}')">Save Template</button></div></div>`;document.getElementById("formModal").classList.add("open")}
+function saveFormEdit(id){const f=state.forms.find(x=>x.id===id);f.title=document.getElementById("efTitle").value;f.type=document.getElementById("efType").value;f.subject=document.getElementById("efSubject").value;f.body=document.getElementById("efBody").value;closeModal("formModal");save();toast("Template saved")}
+function openFormBuilder(){const f={id:uid("form"),type:"Custom",title:"New Custom Form",subject:"Custom Training Form",body:""};state.forms.push(f);save();editForm(f.id)}
+function openFormFromDoc(){const t=selectedTrainee();document.getElementById("formModalTitle").textContent="Email Manual Text";document.getElementById("formModalBody").innerHTML=`<div class="field"><label>To<input id="sendTo" value="${esc(t.email||"")}"></label></div><div class="field" style="margin-top:10px"><label>Subject<input id="sendSubject" value="${esc(activeDoc)}"></label></div><div class="field" style="margin-top:10px"><label>Body<textarea class="clean" style="min-height:390px" id="sendBody">${esc(state.docs[activeDoc])}</textarea></label></div><div class="actions" style="justify-content:flex-start;margin-top:12px"><button class="btn orange" onclick="mailtoCurrent()">Open Email Draft</button><button class="btn light" onclick="copySendBody()">Copy Body</button></div>`;document.getElementById("formModal").classList.add("open")}
+function openNewHire(){document.getElementById("hireTitle").textContent="Add New Hire";document.getElementById("editTraineeId").value="";document.querySelector("#hireModal form").reset();document.getElementById("hireDate").value=today();document.getElementById("startDate").value=today();populate();document.getElementById("hireModal").classList.add("open")}
+function editTrainee(id){const t=state.trainees.find(x=>x.id===id);if(!t)return;populate();document.getElementById("hireTitle").textContent="Edit New Hire";["firstName","lastName","phone","email","position","location","hireDate","startDate","assignedTrainer","status","hireNotes"].forEach(k=>document.getElementById(k).value=t[k]||"");document.getElementById("editTraineeId").value=t.id;document.getElementById("hireModal").classList.add("open")}
+function saveTrainee(e){e.preventDefault();const d={};["firstName","lastName","phone","email","position","location","hireDate","startDate","assignedTrainer","status","hireNotes"].forEach(k=>d[k]=document.getElementById(k).value);const id=document.getElementById("editTraineeId").value;if(id){const t=state.trainees.find(x=>x.id===id);const old=t.position;Object.assign(t,d);if(old!==d.position&&confirm("Position changed. Rebuild checklist?"))t.steps=makeTrainee(d).steps}else state.trainees.push(makeTrainee(d));closeModal("hireModal");save();toast("New hire saved")}
+function openProfile(id){selectedTraineeId=id;const t=state.trainees.find(x=>x.id===id);if(!t)return;document.getElementById("drawerTitle").textContent=`${t.firstName} ${t.lastName}`;document.getElementById("drawerSub").textContent=`${t.position} • ${t.location} • ${t.status}`;renderProfile(t);document.getElementById("profileDrawer").classList.add("open")}
+function closeDrawer(){document.getElementById("profileDrawer").classList.remove("open")}
+function renderProfile(t){const pct=completion(t),ns=state.notes.filter(n=>n.traineeId===t.id).sort((a,b)=>String(b.date).localeCompare(String(a.date)));document.getElementById("profileContent").innerHTML=`<div class="card pad"><div class="nameCell"><div class="avatar" style="width:66px;height:66px;border-radius:20px;font-size:25px">${esc(initials(t))}</div><div><h2 style="color:var(--green2)">${esc(t.firstName)} ${esc(t.lastName)}</h2><p style="color:var(--soft);font-weight:700">${esc(t.position)} • Trainer: ${esc(t.assignedTrainer||"Unassigned")}</p><div style="margin-top:8px">${badgeStatus(t.status)} <span class="badge bOrange">${pct}% Complete</span> ${flagsFor(t).map(f=>`<span class="badge bRed">${esc(f)}</span>`).join(" ")}</div></div></div><div class="two" style="margin-top:14px"><div class="note"><div class="noteTop"><b>Contact</b><small>${esc(t.location)}</small></div><p>${esc(t.email)}<br>${esc(t.phone)}<br>Hire: ${niceDate(t.hireDate)} | Start: ${niceDate(t.startDate)}</p></div><div class="note"><div class="noteTop"><b>Profile Notes</b><small>New Hire</small></div><p>${esc(t.hireNotes||"No profile notes.")}</p></div></div></div><div class="split" style="margin-top:14px"><div class="card pad"><div class="panelTitle" style="padding:0 0 12px;border-bottom:0"><div><h3>Training Checklist</h3><p>Trainer signs off day-by-day.</p></div></div>${t.steps.map((d,di)=>`<div class="stepBlock"><div class="stepHead"><h4>${esc(d.title)}</h4><small>${d.steps.filter(s=>s.status==="Complete").length}/${d.steps.length}</small></div>${d.steps.map((s,si)=>`<div class="stepRow"><div><b>${esc(s.title)}</b><small>${esc(s.detail)}</small></div><select onchange="updateStep('${t.id}',${di},${si},'status',this.value)">${["Not Started","In Progress","Complete","Needs Review","Failed"].map(o=>`<option ${s.status===o?"selected":""}>${o}</option>`).join("")}</select><input type="number" min="1" max="5" placeholder="1-5" value="${esc(s.score)}" onchange="updateStep('${t.id}',${di},${si},'score',this.value)"><input placeholder="Trainer" value="${esc(s.trainer)}" onchange="updateStep('${t.id}',${di},${si},'trainer',this.value)"></div>`).join("")}</div>`).join("")}</div><div><div class="card"><div class="panelTitle"><div><h3>Notes</h3><p>Manager and trainer comments.</p></div><button class="btn orange small" onclick="openNote()">Add</button></div><div class="card pad" style="border:0;box-shadow:none">${ns.map(n=>`<div class="note ${noteColor(n.type)}"><div class="noteTop"><b>${esc(n.type)} • ${esc(n.author||"")}</b><small>${niceDate(n.date)}</small></div><p>${esc(n.text)}</p></div>`).join("")||'<div class="empty">No notes yet.</div>'}</div></div><div class="card" style="margin-top:14px"><div class="panelTitle"><div><h3>Quick Send</h3><p>Email forms/templates for this trainee.</p></div></div><div class="card pad" style="border:0;box-shadow:none"><button class="btn full orange" onclick="document.getElementById('sendTrainee').value='${t.id}';setView('forms')">Open Form Sender</button></div></div></div></div>`}
+function updateStep(tid,di,si,key,val){const t=state.trainees.find(x=>x.id===tid);t.steps[di].steps[si][key]=val;if(key==="status"&&val==="Complete")t.steps[di].steps[si].date=today();if(completion(t)===100)t.status="Ready for Manager Wait";else if(t.status==="Not Started")t.status="In Training";localStorage.setItem(KEY,JSON.stringify(state));renderAll();renderProfile(t)}
+function openNote(){if(!selectedTraineeId){toast("Open trainee first");return}document.getElementById("noteType").value="General";document.getElementById("noteAuthor").value="";document.getElementById("noteText").value="";document.getElementById("noteModal").classList.add("open")}
+function saveNote(e){e.preventDefault();state.notes.push({id:uid("note"),traineeId:selectedTraineeId,type:document.getElementById("noteType").value,author:document.getElementById("noteAuthor").value,text:document.getElementById("noteText").value,date:today()});closeModal("noteModal");save();openProfile(selectedTraineeId);toast("Note saved")}
+function noteColor(t){return/red|attendance|skill/i.test(t)?"red":/coaching/i.test(t)?"yellow":/positive/i.test(t)?"blue":/trainee/i.test(t)?"orange":""}
+function renderTrainer(){document.getElementById("trainerGrid").innerHTML=state.trainers.map(tr=>{const ts=state.trainees.filter(t=>t.assignedTrainer===tr.name),avg=ts.length?Math.round(ts.reduce((a,t)=>a+completion(t),0)/ts.length):0,fl=ts.reduce((a,t)=>a+flagsFor(t).length,0);return`<div class="card pad"><div class="two"><div><h3 style="color:var(--green2)">${esc(tr.name)}</h3><p style="color:var(--soft);font-size:12px;font-weight:700">${esc(tr.position)} • ${esc(tr.location)} ${tr.email?"• "+esc(tr.email):""}</p><p style="font-size:12px;font-weight:650;margin-top:5px">${esc(tr.notes||"")}</p><div style="margin-top:9px;display:flex;gap:7px;flex-wrap:wrap"><span class="badge bGreen">${ts.length} Trainees</span><span class="badge bOrange">${avg}% Avg</span><span class="badge ${fl?"bRed":"bGreen"}">${fl} Flags</span></div></div><div class="actions"><button class="btn light small" onclick="filterTrainer('${esc(tr.name)}')">View Trainees</button></div></div></div>`}).join("")}
+function filterTrainer(n){setView("dashboard");document.getElementById("traineeSearch").value=n;renderDashboard()}
+function openTrainer(){populate();document.getElementById("trainerName").value="";document.getElementById("trainerEmail").value="";document.getElementById("trainerNotes").value="";document.getElementById("trainerModal").classList.add("open")}
+function saveTrainer(e){e.preventDefault();state.trainers.push({id:uid("trainer"),name:document.getElementById("trainerName").value,position:document.getElementById("trainerPosition").value,location:document.getElementById("trainerLocation").value,email:document.getElementById("trainerEmail").value,notes:document.getElementById("trainerNotes").value});closeModal("trainerModal");save();toast("Trainer saved")}
+function renderReports(){const needs=state.trainees.filter(t=>t.status!=="Certified"||flagsFor(t).length);document.getElementById("reportRows").innerHTML=needs.map(t=>`<tr><td>${esc(t.firstName)} ${esc(t.lastName)}</td><td>${esc(t.position)}</td><td>${esc(currentStage(t))}</td><td>${completion(t)}%</td><td>${flagsFor(t).map(f=>`<span class="badge bRed">${esc(f)}</span>`).join(" ")||'<span class="badge bGreen">Clear</span>'}</td></tr>`).join("")||'<tr><td colspan="5"><div class="empty">Nothing needs attention.</div></td></tr>';const by={};state.trainees.forEach(t=>by[t.status]=(by[t.status]||0)+1);document.getElementById("reportSummary").innerHTML=`<div class="grid">${Object.entries(by).map(([k,v])=>`<div class="note"><div class="noteTop"><b>${esc(k)}</b><small>Status</small></div><p style="font-size:28px;font-weight:900;color:var(--green2)">${v}</p></div>`).join("")}</div>`}
+function renderSettings(){document.getElementById("appsScriptUrl").value=state.settings.appsScriptUrl||"";document.getElementById("firebaseConfig").value=state.settings.firebaseConfig||""}function saveSettings(){state.settings.appsScriptUrl=document.getElementById("appsScriptUrl").value.trim();state.settings.firebaseConfig=document.getElementById("firebaseConfig").value.trim();localStorage.setItem(KEY,JSON.stringify(state))}
+function renderVault(){document.getElementById("sourceDocs").innerHTML=sourceFiles.map(f=>`<div class="vaultFile"><div><b>${esc(f)}</b><small>Source/reference converted into manual/forms/tracker structure. Upload original file here for local vault access.</small></div><span class="badge bOrange">Source</span></div>`).join("");listVaultFiles()}
+function initVault(){const req=indexedDB.open("hlTrainerVault",1);req.onupgradeneeded=e=>{e.target.result.createObjectStore("files",{keyPath:"id"})};req.onsuccess=e=>{db=e.target.result;renderVault()};req.onerror=()=>console.warn("IndexedDB unavailable")}
+function uploadVaultFiles(e){if(!db){toast("Vault database not ready");return}Array.from(e.target.files).forEach(file=>{const reader=new FileReader();reader.onload=()=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").put({id:uid("file"),name:file.name,type:file.type,size:file.size,date:new Date().toISOString(),data:reader.result});tx.oncomplete=()=>{listVaultFiles();toast("File uploaded to vault")}};reader.readAsDataURL(file)});e.target.value=""}
+function listVaultFiles(){const box=document.getElementById("vaultList");if(!box)return;if(!db){box.innerHTML='<div class="empty">Vault loading...</div>';return}const tx=db.transaction("files","readonly"),req=tx.objectStore("files").getAll();req.onsuccess=()=>{const files=req.result||[];box.innerHTML=files.length?files.map(f=>`<div class="vaultFile"><div><b>${esc(f.name)}</b><small>${esc(f.type||"file")} • ${(f.size/1024).toFixed(1)} KB • ${new Date(f.date).toLocaleString()}</small></div><div class="actions"><button class="btn light small" onclick="openVaultFile('${f.id}')">Open</button><button class="btn red small" onclick="deleteVaultFile('${f.id}')">Delete</button></div></div>`).join(""):'<div class="empty">No files uploaded yet.</div>'}}
+function openVaultFile(id){const tx=db.transaction("files","readonly"),req=tx.objectStore("files").get(id);req.onsuccess=()=>{const f=req.result;if(!f)return;const w=window.open("");if(f.type&&f.type.startsWith("image/"))w.document.write(`<img src="${f.data}" style="max-width:100%">`);else w.location.href=f.data}}
+function deleteVaultFile(id){if(!confirm("Delete this vault file from this browser?"))return;const tx=db.transaction("files","readwrite");tx.objectStore("files").delete(id);tx.oncomplete=()=>{listVaultFiles();toast("File deleted")}}
+function closeModal(id){document.getElementById(id).classList.remove("open")}
+function resetAll(){if(confirm("Reset all local data?")){localStorage.removeItem(KEY);location.reload()}}
+function seedDemo(){if(confirm("Reload demo data and reset local data?")){localStorage.removeItem(KEY);state=defaultState();seedInitial();renderAll();toast("Demo reloaded")}}
+function exportJSON(){downloadBlob(new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),"huey-newhire-trainer-backup.json")}
+function importJSONClick(){document.getElementById("jsonImport").click()}function importJSON(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();toast("Backup imported")}catch(err){alert("Invalid JSON")}};r.readAsText(f)}
+function exportCSV(){const rows=[["First Name","Last Name","Email","Phone","Position","Location","Trainer","Status","Progress","Current Stage","Flags","Last Note"]];state.trainees.forEach(t=>rows.push([t.firstName,t.lastName,t.email,t.phone,t.position,t.location,t.assignedTrainer,t.status,completion(t),currentStage(t),flagsFor(t).join("; "),lastNote(t)]));downloadBlob(new Blob([rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\\n")],{type:"text/csv"}),"huey-training-trainees.csv")}
+function downloadBlob(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function printProfile(){if(!selectedTraineeId)return;const t=state.trainees.find(x=>x.id===selectedTraineeId);const w=window.open("","_blank");w.document.write(`<body style="font-family:Poppins,Arial;padding:24px"><h1 style="color:#16643e">Huey Luey's Training Report</h1><h2>${esc(t.firstName)} ${esc(t.lastName)} — ${esc(t.position)}</h2><p>Status: ${esc(t.status)} | Progress: ${completion(t)}% | Trainer: ${esc(t.assignedTrainer)}</p>${t.steps.map(d=>`<h3>${esc(d.title)}</h3><table style="width:100%;border-collapse:collapse"><tr><th style="border:1px solid #aaa;padding:6px">Item</th><th style="border:1px solid #aaa;padding:6px">Status</th><th style="border:1px solid #aaa;padding:6px">Score</th><th style="border:1px solid #aaa;padding:6px">Trainer</th></tr>${d.steps.map(s=>`<tr><td style="border:1px solid #aaa;padding:6px">${esc(s.title)}</td><td style="border:1px solid #aaa;padding:6px">${esc(s.status)}</td><td style="border:1px solid #aaa;padding:6px">${esc(s.score)}</td><td style="border:1px solid #aaa;padding:6px">${esc(s.trainer)}</td></tr>`).join("")}</table>`).join("")}<h3>Manager Sign-Off</h3><p style="margin-top:35px">Signature: __________________ Date: __________</p><script>setTimeout(()=>print(),250)<\/script></body>`);w.document.close()}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.querySelectorAll(".modal").forEach(m=>m.classList.remove("open"));closeDrawer()}})
+load();renderAll();
+</script>
+</body>
+</html>
